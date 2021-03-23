@@ -1,5 +1,7 @@
 package cn.euphonium.codereviewsystemserver.service.impl;
 
+import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
+import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.service.FileService;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +46,50 @@ public class FileServiceImpl implements FileService {
             e.getStackTrace();
         }
         return "error";
+    }
+
+    @Override
+    public CodeMsg codeFormat(CodeMsg codeMsg) {
+        //todo
+        String code = codeMsg.getCode();
+        CodeMsg res = new CodeMsg();
+        try {
+            //write to file
+            BufferedWriter out = new BufferedWriter(new FileWriter("code_format.c"));
+            out.write(code);
+            out.close();
+
+            StringBuilder sb = new StringBuilder();
+//            sb.append("eupho");
+            Process process = Runtime.getRuntime().exec("gcc ./code_format.c");
+            InputStream inputStream = process.getErrorStream();
+            byte[] b = new byte[8192];
+            for (int n; (n = inputStream.read(b)) != -1; ) {
+                sb.append(new String(b, 0, n));
+            }
+
+            inputStream.close();
+            process.destroy();
+
+            String compileResult = sb.toString();
+//            System.out.println(compileResult);
+
+            //regex match
+            String[] compileResultLines = compileResult.split("\n");
+            String regex = ".*error.*";
+            for (String line : compileResultLines) {
+                if (line.matches(regex)) {
+                    res.setStatus(ConstInfo.C_COMPILE_ERROR);
+                    break;
+                }
+            }
+            if (res.getStatus() == 0) {
+                //add code about code format
+                //todo
+            }
+        }catch (IOException e) {
+            e.getStackTrace();
+        }
+        return res;
     }
 }

@@ -4,15 +4,12 @@ import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
 import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.entity.FileContent;
 import cn.euphonium.codereviewsystemserver.service.FileService;
-import cn.euphonium.codereviewsystemserver.service.impl.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.SocketException;
-import java.util.Arrays;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -57,5 +54,11 @@ public class FileController {
     public String codeReview(@RequestBody CodeMsg codeMsg) throws IOException {
 
         return fileService.codeReview(codeMsg.getCode());
+    }
+
+    @RequestMapping(value = "/codeFormat", method = RequestMethod.POST)
+    public CodeMsg codeFormat(@RequestBody CodeMsg codeMsg) {
+
+        return fileService.codeFormat(codeMsg);
     }
 }
