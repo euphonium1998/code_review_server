@@ -3,6 +3,7 @@ package cn.euphonium.codereviewsystemserver.service.impl;
 import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
 import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.service.FileService;
+import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -84,8 +85,9 @@ public class FileServiceImpl implements FileService {
                 }
             }
             if (res.getStatus() == 0) {
-                //add code about code format
-                //todo
+                // code about code format
+                String originalCode = res.getCode();
+                res.setCode(CodeUtils.codeFormat(originalCode));
             }
         }catch (IOException e) {
             e.getStackTrace();
