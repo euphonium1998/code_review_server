@@ -62,7 +62,7 @@ public class FileServiceImpl implements FileService {
 
             StringBuilder sb = new StringBuilder();
 //            sb.append("eupho");
-            Process process = Runtime.getRuntime().exec("gcc ./code_format.c");
+            Process process = Runtime.getRuntime().exec("gcc -std=c99 code_format.c");
             InputStream inputStream = process.getErrorStream();
             byte[] b = new byte[8192];
             for (int n; (n = inputStream.read(b)) != -1; ) {
@@ -86,7 +86,8 @@ public class FileServiceImpl implements FileService {
             }
             if (res.getStatus() == 0) {
                 // code about code format
-                String originalCode = res.getCode();
+                String originalCode = codeMsg.getCode();
+                System.out.println(originalCode);
                 res.setCode(CodeUtils.codeFormat(originalCode));
             }
         }catch (IOException e) {

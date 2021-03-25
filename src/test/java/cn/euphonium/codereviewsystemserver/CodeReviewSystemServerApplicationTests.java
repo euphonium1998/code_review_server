@@ -13,14 +13,12 @@ class CodeReviewSystemServerApplicationTests {
 
     @Test
     void contextLoads() {
-        String test = "#include<stdio.h>\n" +
-                "  int main() { //code he\"\"re1\n" +
-                "           printf(\"hello\\n\");\n" +
-                "return 0;\n" +
-                "    /*\n" +
-                "    code he're'2\n" +
-                "    */\n" +
-                "  }";
+        String test = "/* example */\n" +
+                "#include<stdio.h>\n" +
+                "\n" +
+                "int main() {\n" +
+                "    printf(\"hello world\\n\");\n" +
+                "}";
         System.out.println(CodeUtils.codeFormat(test));
 
 //        System.out.println(CodeUtils.codeFormat(test));
@@ -36,6 +34,34 @@ class CodeReviewSystemServerApplicationTests {
         for (String s1 : list) {
             System.out.println(s1);
         }
+    }
+
+    @Test
+    void error1() {
+        String s = "#include<stdio.h>\n" +
+                "int main() { //code he\"\"re1\n" +
+                "    int a=0, b =1;\n" +
+                "    printf(\"hellon\");\n" +
+                "    return 0;\n" +
+                "    for (int i = 0; i <3; i++) { //code3\n" +
+                "        \n" +
+                "    }\n" +
+                "    for (int k = 0; k < 22;) {\n" +
+                "        k<< 1;\n" +
+                "    }\n" +
+                "    /*\n" +
+                "    code he're'2\n" +
+                "    */\n" +
+                "}";
+        System.out.println(CodeUtils.codeFormat(s));
+    }
+
+    @Test
+    void error2() {
+        String s = "    for (int k = 0; k < 22;) {\n";
+        String s2 = "printf(\"hello world\\n\")";
+//        System.out.println(CodeUtils.formatMain(s));
+        System.out.println(CodeUtils.formatMain(s2));
     }
 
 }

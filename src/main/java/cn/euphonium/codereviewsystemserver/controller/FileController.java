@@ -58,7 +58,7 @@ public class FileController {
 
     @RequestMapping(value = "/codeFormat", method = RequestMethod.POST)
     public CodeMsg codeFormat(@RequestBody CodeMsg codeMsg) {
-
+//        System.out.println(codeMsg.getCode());
         return fileService.codeFormat(codeMsg);
     }
 }
