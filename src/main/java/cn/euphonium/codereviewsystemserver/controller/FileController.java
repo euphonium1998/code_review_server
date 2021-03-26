@@ -5,9 +5,11 @@ import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.entity.FileContent;
 import cn.euphonium.codereviewsystemserver.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.SocketException;
 
@@ -60,5 +62,11 @@ public class FileController {
     public CodeMsg codeFormat(@RequestBody CodeMsg codeMsg) {
 //        System.out.println(codeMsg.getCode());
         return fileService.codeFormat(codeMsg);
+    }
+
+    @GetMapping(value = "/download")
+    public ResponseEntity<Object> download() {
+//        System.out.println("here");
+        return fileService.download();
     }
 }

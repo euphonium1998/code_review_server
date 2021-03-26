@@ -3,13 +3,26 @@ package cn.euphonium.codereviewsystemserver.utils;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeUtils {
 
+    public static String opRegex = "";
     public static final String ANNOTATION_REPLACEMENT = "@annotation";
+    public static final String[] BINARY_OPERATOR = {"<<", ">>", "&&", "\\|\\|", "\\+", "-", "\\*", "/", "%", "=", "==", "!=", "<", ">", "<=", ">=", "\\+=", "\\*=", "/=", "-="};
+
+    static {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for (String op : BINARY_OPERATOR) {
+            sb.append(op).append("|");
+        }
+        sb.deleteCharAt(sb.length() - 1).append(")");
+        opRegex = sb.toString();
+    }
 
     public static String indentSizeToSpace(int indentSize) {
         String fourSpace = "    ";
@@ -113,7 +126,7 @@ public class CodeUtils {
 //            System.out.println(lines[i]);
 
             //operator process
-            //todo
+            lines[i] = operatorProcess(lines[i]);
 
             //space process
             lines[i] = spaceProcess(lines[i]);
@@ -252,6 +265,56 @@ public class CodeUtils {
 
     public static String spaceProcess(String originalLine) {
         return originalLine.replaceAll("\\s+", " ");
+    }
+
+    public static String operatorProcess(String originalLine) {
+//        System.out.println(originalLine);
+        if (originalLine.matches("\\s*#include<.*>\\s*")) {
+            return originalLine;
+        }
+        Pattern binaryOperatorPattern = Pattern.compile("(\\s*(\\d|\\w)+\\s*" + opRegex + ")+" + "\\s*(\\d|\\w)+\\s*");
+//        System.out.println(binaryOperatorPattern.pattern());
+
+        Matcher matcherOp = binaryOperatorPattern.matcher(originalLine);
+        int last = 0;
+        StringBuilder sb = new StringBuilder();
+        while (matcherOp.find()) {
+            String opCodeDetail = originalLine.substring(matcherOp.start(), matcherOp.end());
+            sb.append(originalLine, last, matcherOp.start());
+//            System.out.println(opCodeDetail);
+            opCodeDetail = operatorProcessDetail(opCodeDetail);
+//            System.out.println(opCodeDetail);
+            sb.append(opCodeDetail);
+            last = matcherOp.end();
+
+//            String sub = code.substring(matcherOp.start() + matcherOp.group(1).length() + matcherOp.group(2).length());
+//            System.out.println(sub);
+//            System.out.println(matcherOp.group(1));
+//            System.out.println(matcherOp.group(2));
+//            System.out.println(matcherOp.group(3));
+
+        }
+        sb.append(originalLine.substring(last));
+        String code = sb.toString();
+
+        return code;
+    }
+
+    private static String operatorProcessDetail(String code) {
+        String[] vars = code.split(opRegex);
+//        System.out.println(Arrays.toString(vars));
+        Pattern patternOp = Pattern.compile(opRegex);
+        Matcher matcherOp = patternOp.matcher(code);
+        int idx = 0;
+        StringBuilder sb = new StringBuilder();
+        while (matcherOp.find()) {
+            sb.append(" ").append(vars[idx++]).append(" ");
+            sb.append(code.substring(matcherOp.start(), matcherOp.end()));
+//            System.out.println(sub);
+        }
+        sb.append(" ").append(vars[idx]).append(" ");
+
+        return sb.toString();
     }
 
     public static String codeFormat(String originalCode) {

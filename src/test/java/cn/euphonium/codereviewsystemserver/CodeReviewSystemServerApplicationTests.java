@@ -64,4 +64,10 @@ class CodeReviewSystemServerApplicationTests {
         System.out.println(CodeUtils.formatMain(s2));
     }
 
+    @Test
+    void operator() {
+        String s = "#include<stdio.h>";
+        CodeUtils.operatorProcess(s);
+    }
+
 }

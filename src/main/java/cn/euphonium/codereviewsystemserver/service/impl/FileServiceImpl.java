@@ -4,6 +4,10 @@ import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
 import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.service.FileService;
 import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -84,15 +88,55 @@ public class FileServiceImpl implements FileService {
                     break;
                 }
             }
+            //do code format
             if (res.getStatus() == 0) {
-                // code about code format
                 String originalCode = codeMsg.getCode();
-                System.out.println(originalCode);
+//                System.out.println(originalCode);
                 res.setCode(CodeUtils.codeFormat(originalCode));
             }
+
+            //write back to file
+            String codeFormatted = res.getCode();
+            BufferedWriter out2 = new BufferedWriter(new FileWriter("code_format.c"));
+            out2.write(codeFormatted);
+            out2.close();
+
         }catch (IOException e) {
             e.getStackTrace();
         }
         return res;
+    }
+
+    @Override
+    public ResponseEntity<Object> download() {
+        File file = new File("code_format.c");
+        if (file.isFile()) {
+//            System.out.println("get file");
+            return downloadFile(file);
+        } else {
+//            System.out.println("no file exist");
+            return null;
+        }
+    }
+
+    public ResponseEntity<Object> downloadFile(File file) {
+        String fileName = file.getName();
+        InputStreamResource resource = null;
+        try {
+            resource = new InputStreamResource(new FileInputStream(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment;filename=\"%s", fileName));
+        headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        ResponseEntity<Object> responseEntity = ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+        return responseEntity;
     }
 }
