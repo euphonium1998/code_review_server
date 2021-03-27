@@ -31,22 +31,44 @@ public class FileServiceImpl implements FileService {
 //            return "create file error";
 //        }
         try {
+            //write file
             BufferedWriter out = new BufferedWriter(new FileWriter("file" + File.separator + "test.c"));
             out.write(code);
             out.close();
-
             StringBuilder sb = new StringBuilder();
-//            sb.append("eupho");
-            Process process = Runtime.getRuntime().exec("splint ./file/test.c");
-            InputStream inputStream = process.getInputStream();
             byte[] b = new byte[8192];
-            for (int n; (n = inputStream.read(b)) != -1;) {
+
+            //gcc part
+            Process processGcc = Runtime.getRuntime().exec("gcc ./file/test.c");
+            InputStream inputStreamGcc = processGcc.getErrorStream();
+            for (int n; (n = inputStreamGcc.read(b)) != -1;) {
                 sb.append(new String(b, 0, n));
             }
+            sb.append("\n");
 
-            inputStream.close();
-            process.destroy();
+            //splint part
+            StringBuilder splintSb = new StringBuilder();
+            Process processSplint = Runtime.getRuntime().exec("splint ./file/test.c");
+            InputStream inputStreamSplint = processSplint.getInputStream();
+            for (int n; (n = inputStreamSplint.read(b)) != -1;) {
+                splintSb.append(new String(b, 0, n));
+            }
+            String splintContent = CodeUtils.splintProcess(splintSb.toString());
+            sb.append(splintContent);
+
+//            inputStreamSplint = processSplint.getErrorStream();
+//            for (int n; (n = inputStreamSplint.read(b)) != -1;) {
+//                sb.append(new String(b, 0, n));
+//            }
+
+            inputStreamGcc.close();
+            processGcc.destroy();
+            inputStreamSplint.close();
+            processSplint.destroy();
+
+            //put two part together
             return sb.toString();
+
         } catch (IOException e) {
             e.getStackTrace();
         }

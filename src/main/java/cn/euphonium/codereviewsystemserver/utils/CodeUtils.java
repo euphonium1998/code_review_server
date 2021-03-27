@@ -339,4 +339,23 @@ public class CodeUtils {
         //step final annotation recovery
         return CodeUtils.annotationRecovery(codeFormatted, annotationList);
     }
+
+    public static String splintProcess(String originalContent) {
+        StringBuilder sb = new StringBuilder();
+        Pattern patternMemory = Pattern.compile("(\\d+):(\\d+): Fresh storage a not released before return");
+        Matcher matcherMemory = patternMemory.matcher(originalContent);
+        Pattern patternVar = Pattern.compile(":(\\d+):\\d+: Variable (\\w(\\w|\\d)*) declared but not used");
+        Matcher matcherVar = patternVar.matcher(originalContent);
+        while (matcherMemory.find()) {
+            String row = matcherMemory.group(1);
+//            String col = matcherVar.group(2);
+            sb.append("代码").append(row).append("行: 申请内存未释放\n");
+        }
+        while (matcherVar.find()) {
+            String row = matcherVar.group(1);
+            String varName = matcherVar.group(2);
+            sb.append("代码").append(row).append("行: ").append("变量").append(varName).append("未使用\n");
+        }
+        return sb.toString();
+    }
 }

@@ -70,4 +70,23 @@ class CodeReviewSystemServerApplicationTests {
         CodeUtils.operatorProcess(s);
     }
 
+    @Test
+    void splint() {
+        String s = "aa.c: (in function main)\n" +
+                "aa.c:8:2: Path with no return in function declared to return int\n" +
+                "  There is a path through a function declared to return a value on which there\n" +
+                "  is no return statement. This means the execution may fall through without\n" +
+                "  returning a meaningful result to the caller. (Use -noret to inhibit warning)\n" +
+                "aa.c:8:2: Fresh storage a not released before return\n" +
+                "  A memory leak has been detected. Storage allocated locally is not released\n" +
+                "  before the last reference to it is lost. (Use -mustfreefresh to inhibit\n" +
+                "  warning)\n" +
+                "   aa.c:6:37: Fresh storage a created\n" +
+                "aa.c:5:6: Variable c declared but not used\n" +
+                "  A variable is declared but never used. Use /*@unused@*/ in front of\n" +
+                "  declaration to suppress message. (Use -varuse to inhibit warning)\n" +
+                "aa.c:6:7: Variable a declared but not used";
+        System.out.println(CodeUtils.splintProcess(s));
+    }
+
 }
