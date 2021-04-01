@@ -12,7 +12,7 @@ public class CodeUtils {
 
     public static String opRegex = "";
     public static final String ANNOTATION_REPLACEMENT = "@annotation";
-    public static final String[] BINARY_OPERATOR = {"<<", ">>", "&&", "\\|\\|", "\\+", "-", "\\*", "/", "%", "=", "==", "!=", "<", ">", "<=", ">=", "\\+=", "\\*=", "/=", "-="};
+    public static final String[] BINARY_OPERATOR = {"\\+=", "\\*=", "/=", "-=", "<<", ">>", "&&", "\\|\\|", "\\+", "-", "\\*", "/", "%", "==", "!=", "<", ">", "<=", ">=", "="};
 
     static {
         StringBuilder sb = new StringBuilder();
@@ -98,6 +98,9 @@ public class CodeUtils {
             lines[i] = quotesReplacement('\"', doubleQuoteInfo, lines[i]);
             lines[i] = quotesReplacement('\'', singleQuoteInfo, lines[i]);
 
+            //operator process
+            lines[i] = operatorProcess(lines[i]);
+
             //bracket process
             lines[i] = bracketProcess(lines[i]);
 
@@ -124,9 +127,6 @@ public class CodeUtils {
             sb.append(subAfterLastComma.replaceAll("^\\s*", " "));
             lines[i] = sb.toString();
 //            System.out.println(lines[i]);
-
-            //operator process
-            lines[i] = operatorProcess(lines[i]);
 
             //space process
             lines[i] = spaceProcess(lines[i]);
@@ -281,7 +281,7 @@ public class CodeUtils {
         while (matcherOp.find()) {
             String opCodeDetail = originalLine.substring(matcherOp.start(), matcherOp.end());
             sb.append(originalLine, last, matcherOp.start());
-//            System.out.println(opCodeDetail);
+            System.out.println(opCodeDetail);
             opCodeDetail = operatorProcessDetail(opCodeDetail);
 //            System.out.println(opCodeDetail);
             sb.append(opCodeDetail);
@@ -296,6 +296,7 @@ public class CodeUtils {
         }
         sb.append(originalLine.substring(last));
         String code = sb.toString();
+        System.out.println(code);
 
         return code;
     }

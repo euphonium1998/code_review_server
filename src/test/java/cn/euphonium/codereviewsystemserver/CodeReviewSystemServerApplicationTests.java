@@ -44,6 +44,7 @@ class CodeReviewSystemServerApplicationTests {
                 "    printf(\"hellon\");\n" +
                 "    return 0;\n" +
                 "    for (int i = 0; i <3; i++) { //code3\n" +
+                "        b+=i;\n" +
                 "        \n" +
                 "    }\n" +
                 "    for (int k = 0; k < 22;) {\n" +
@@ -66,7 +67,7 @@ class CodeReviewSystemServerApplicationTests {
 
     @Test
     void operator() {
-        String s = "#include<stdio.h>";
+        String s = "b+=i";
         CodeUtils.operatorProcess(s);
     }
 
