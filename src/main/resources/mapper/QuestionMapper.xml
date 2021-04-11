@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.euphonium.codereviewsystemserver.mapper.QuestionMapper">
+    <insert id="insertOneQuestion" parameterType="Question">
+        insert into question
+        (name, account, question_description, input_description, output_description, sample_input, sample_output)
+        VALUES
+        (#{name}, #{account}, #{questionDescription}, #{inputDescription}, #{outputDescription}, #{sampleInput}, #{sampleOutput})
+    </insert>
+
+    <select id="selectAllQuestion" resultType="Question">
+        SELECT id, name FROM question;
+    </select>
+
+    <insert id="insertOneSample" parameterType="Sample">
+        INSERT INTO sample
+            (qid, input, output)
+        VALUES
+            (#{pid}, #{input}, #{output});
+    </insert>
+
+    <select id="selectOneQuestion" parameterType="int" resultType="Question">
+        SELECT *
+        FROM question
+        WHERE id = #{id};
+    </select>
+</mapper>

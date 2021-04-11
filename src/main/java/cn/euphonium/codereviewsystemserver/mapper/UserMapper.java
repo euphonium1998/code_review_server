@@ -10,4 +10,6 @@ public interface UserMapper {
     List<User> findAll();
 
     User login(User user);
+
+    String getNameByAccount(String account);
 }

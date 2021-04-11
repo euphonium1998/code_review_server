@@ -1,8 +1,15 @@
 package cn.euphonium.codereviewsystemserver;
 
+import cn.euphonium.codereviewsystemserver.entity.Question;
+import cn.euphonium.codereviewsystemserver.entity.Sample;
+import cn.euphonium.codereviewsystemserver.mapper.QuestionMapper;
+import cn.euphonium.codereviewsystemserver.mapper.UserMapper;
+import cn.euphonium.codereviewsystemserver.service.QuestionService;
 import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +17,15 @@ import java.util.List;
 
 @SpringBootTest
 class CodeReviewSystemServerApplicationTests {
+
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     void contextLoads() {
@@ -88,6 +104,64 @@ class CodeReviewSystemServerApplicationTests {
                 "  declaration to suppress message. (Use -varuse to inhibit warning)\n" +
                 "aa.c:6:7: Variable a declared but not used";
         System.out.println(CodeUtils.splintProcess(s));
+    }
+
+    @Test
+    void insertQ() {
+
+        Question q = new Question();
+        q.setName("test test");
+        q.setAccount("170110317");
+        q.setQuestionDescription("alielie");
+        q.setInputDescription("bilibili");
+        q.setOutputDescription("acfun");
+        q.setSampleInput("1 2 3\n" +
+                "4 5 6 7\n" +
+                "2 3");
+        q.setSampleOutput("2 3 4");
+        int i = questionMapper.insertOneQuestion(q);
+        System.out.println(i);
+    }
+
+    @Test
+    void selectAllQ() {
+        List<Question> q = questionMapper.selectAllQuestion();
+        System.out.println(q);
+    }
+
+    @Test
+    void insertOneSample() {
+        Sample s = new Sample();
+        s.setPid(1);
+        s.setInput("3 5");
+        s.setOutput("8");
+        questionMapper.insertOneSample(s);
+    }
+
+    @Test
+    void selectOneQuestion() {
+        Question q = questionMapper.selectOneQuestion(1);
+        System.out.println(q);
+    }
+
+    @Test
+    void testTransactional() {
+        try {
+            questionService.insertOneQuestion(new Question());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("false");
+        }
+    }
+
+    @Test
+    void testGetName() {
+        System.out.println(userMapper.getNameByAccount("170110314"));
+    }
+
+    @Test
+    void selectOneQuestionById() {
+        System.out.println(questionService.selectOneQuestionById(1));
     }
 
 }

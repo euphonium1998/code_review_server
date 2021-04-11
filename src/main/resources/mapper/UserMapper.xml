@@ -10,4 +10,10 @@
         and user.password = #{password}
         limit 1
     </select>
+
+    <select id="getNameByAccount" parameterType="string" resultType="string">
+        SELECT name
+        FROM user
+        WHERE account = #{account}
+    </select>
 </mapper>
