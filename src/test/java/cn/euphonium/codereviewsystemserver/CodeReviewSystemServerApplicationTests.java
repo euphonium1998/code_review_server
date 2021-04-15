@@ -1,19 +1,19 @@
 package cn.euphonium.codereviewsystemserver;
 
-import cn.euphonium.codereviewsystemserver.entity.Question;
-import cn.euphonium.codereviewsystemserver.entity.Sample;
+import cn.euphonium.codereviewsystemserver.entity.*;
 import cn.euphonium.codereviewsystemserver.mapper.QuestionMapper;
 import cn.euphonium.codereviewsystemserver.mapper.UserMapper;
 import cn.euphonium.codereviewsystemserver.service.QuestionService;
 import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
+import cn.euphonium.codereviewsystemserver.utils.SandboxUtils;
+import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 class CodeReviewSystemServerApplicationTests {
@@ -162,6 +162,44 @@ class CodeReviewSystemServerApplicationTests {
     @Test
     void selectOneQuestionById() {
         System.out.println(questionService.selectOneQuestionById(1));
+    }
+
+    @Test
+    void restTemplate() {
+        String url = "http://47.97.202.211:16666/findAll";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String s = restTemplate.getForObject(url, String.class);
+        System.out.println(s);
+    }
+
+    @Test
+    void testInt() {
+        long i = 30000000000L;
+        System.out.println(i);
+    }
+
+    @Test
+    void restTemplatePost() {
+        String url = "http://118.178.194.230:5050/file";
+        RestTemplate restTemplate = new RestTemplate();
+        String s = restTemplate.getForObject(url, String.class);
+        System.out.println(s);
+    }
+
+    @Test
+    void testFastJson() {
+        String s = SandboxUtils.compileCodeInSandbox("hh", "tt");
+        System.out.println(s);
+    }
+
+    @Test
+    void testFastJSON2() {
+        String s = "[{\"status\":\"Accepted\",\"exitStatus\":0,\"time\":1285585,\"memory\":262144,\"runTime\":1788296,\"files\":{\"stderr\":\"\",\"stdout\":\"20\\n\"}}]";
+        s = s.substring(1, s.length() - 1);
+        System.out.println(s);
+        SandboxResponse res = JSON.parseObject(s, SandboxResponse.class);
+        System.out.println(res);
     }
 
 }
