@@ -188,8 +188,8 @@ class CodeReviewSystemServerApplicationTests {
     }
 
     @Test
-    void testFastJson() {
-        String s = SandboxUtils.compileCodeInSandbox("hh", "tt");
+    void testFastJson() throws Exception {
+        String s = SandboxUtils.compileCodeInSandbox("hh");
         System.out.println(s);
     }
 
@@ -202,4 +202,45 @@ class CodeReviewSystemServerApplicationTests {
         System.out.println(res);
     }
 
+    @Test
+    void testPost() throws Exception {
+        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a - b);\n}";
+//        System.out.println(s);
+        String res = SandboxUtils.compileCodeInSandbox(s);
+        System.out.println(res);
+    }
+
+    @Test
+    void testDelete() {
+        try {
+            SandboxUtils.deleteFileByIdInSandbox("ABNZVTDQPIUQBDHN");
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println(e.toString());
+//            throw e;
+        }
+    }
+
+    @Test
+    void testOJ() {
+        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a + b);\nwhile(1){}}";
+        Question q = new Question();
+        List<Sample> samples = new ArrayList<>();
+        Sample sample1 = new Sample();
+        Sample sample2 = new Sample();
+        Sample sample3 = new Sample();
+        sample1.setInput("1 2");
+        sample2.setInput("23 54");
+        sample3.setInput("2 4");
+        sample1.setOutput("3");
+        sample2.setOutput("77");
+        sample3.setOutput("5");
+        samples.add(sample1);
+        samples.add(sample2);
+        samples.add(sample3);
+        q.setSamples(samples);
+        OJResponse  res = questionService.onlineJudgement(q, s);
+        System.out.println(res);
+
+    }
 }

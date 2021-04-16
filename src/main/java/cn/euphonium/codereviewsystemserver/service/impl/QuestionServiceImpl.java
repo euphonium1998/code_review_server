@@ -1,10 +1,14 @@
 package cn.euphonium.codereviewsystemserver.service.impl;
 
+import cn.euphonium.codereviewsystemserver.entity.OJResponse;
 import cn.euphonium.codereviewsystemserver.entity.Question;
 import cn.euphonium.codereviewsystemserver.entity.Sample;
+import cn.euphonium.codereviewsystemserver.entity.SandboxResponse;
 import cn.euphonium.codereviewsystemserver.mapper.QuestionMapper;
 import cn.euphonium.codereviewsystemserver.mapper.UserMapper;
 import cn.euphonium.codereviewsystemserver.service.QuestionService;
+import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
+import cn.euphonium.codereviewsystemserver.utils.SandboxUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,5 +61,28 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> selectAllQuestion() {
         return questionMapper.selectAllQuestion();
+    }
+
+    @Override
+    public OJResponse onlineJudgement(Question question, String code) {
+        String fileId = "";
+        OJResponse ojRes = new OJResponse();
+        ojRes.setStatus("Accepted");
+        try {
+            fileId = SandboxUtils.compileCodeInSandbox(code);
+            for (Sample sample : question.getSamples()) {
+                //judge
+                ojRes = SandboxUtils.onlineJudgeOneSample(sample, fileId, ojRes);
+            }
+        } catch (Exception e) {
+            ojRes.setStatus("Other error[" + e.toString() + "]");
+            return ojRes;
+        } finally {
+            if (!fileId.equals("")) {
+                SandboxUtils.deleteFileByIdInSandbox(fileId);
+            }
+            return ojRes;
+        }
+
     }
 }

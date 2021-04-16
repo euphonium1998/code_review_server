@@ -43,5 +43,6 @@ public class Cmd {
         files[1] = map2;
         files[2] = map3;
         this.files = files;
+        this.copyIn = new HashMap<>();
     }
 }
