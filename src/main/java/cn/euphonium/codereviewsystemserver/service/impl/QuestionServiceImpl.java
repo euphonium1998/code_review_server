@@ -1,9 +1,6 @@
 package cn.euphonium.codereviewsystemserver.service.impl;
 
-import cn.euphonium.codereviewsystemserver.entity.OJResponse;
-import cn.euphonium.codereviewsystemserver.entity.Question;
-import cn.euphonium.codereviewsystemserver.entity.Sample;
-import cn.euphonium.codereviewsystemserver.entity.SandboxResponse;
+import cn.euphonium.codereviewsystemserver.entity.*;
 import cn.euphonium.codereviewsystemserver.mapper.QuestionMapper;
 import cn.euphonium.codereviewsystemserver.mapper.UserMapper;
 import cn.euphonium.codereviewsystemserver.service.QuestionService;
@@ -26,7 +23,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public void insertOneQuestion(Question question) {
+    public SqlMsg insertOneQuestion(Question question) {
 //        questionMapper.
 //        Question q = new Question();
 //        q.setName("test test");
@@ -41,12 +38,20 @@ public class QuestionServiceImpl implements QuestionService {
 //        questionMapper.insertOneQuestion(q);
 //        q.setAccount("170110324");
 //        questionMapper.insertOneQuestion(q);
-        questionMapper.insertOneQuestion(question);
-        int pid = question.getId();
-        for (Sample s : question.getSamples()) {
-            s.setPid(pid);
-            questionMapper.insertOneSample(s);
+        SqlMsg sqlMsg = new SqlMsg();
+        try {
+            questionMapper.insertOneQuestion(question);
+            int pid = questionMapper.selectQuestionByName(question.getName());
+            for (Sample s : question.getSamples()) {
+                s.setPid(pid);
+                questionMapper.insertOneSample(s);
+            }
+        } catch (Exception e) {
+            sqlMsg.setSqlError(e.toString());
+            sqlMsg.setStatus(ConstInfo.SQL_ERROR);
         }
+        return sqlMsg;
+
     }
 
     @Transactional

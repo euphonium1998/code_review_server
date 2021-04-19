@@ -106,141 +106,146 @@ class CodeReviewSystemServerApplicationTests {
         System.out.println(CodeUtils.splintProcess(s));
     }
 
-    @Test
-    void insertQ() {
-
-        Question q = new Question();
-        q.setName("test test");
-        q.setAccount("170110317");
-        q.setQuestionDescription("alielie");
-        q.setInputDescription("bilibili");
-        q.setOutputDescription("acfun");
-        q.setSampleInput("1 2 3\n" +
-                "4 5 6 7\n" +
-                "2 3");
-        q.setSampleOutput("2 3 4");
-        int i = questionMapper.insertOneQuestion(q);
-        System.out.println(i);
-    }
-
-    @Test
-    void selectAllQ() {
-        List<Question> q = questionMapper.selectAllQuestion();
-        System.out.println(q);
-    }
-
-    @Test
-    void insertOneSample() {
-        Sample s = new Sample();
-        s.setPid(1);
-        s.setInput("3 5");
-        s.setOutput("8");
-        questionMapper.insertOneSample(s);
-    }
-
-    @Test
-    void selectOneQuestion() {
-        Question q = questionMapper.selectOneQuestion(1);
-        System.out.println(q);
-    }
-
-    @Test
-    void testTransactional() {
-        try {
-            questionService.insertOneQuestion(new Question());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("false");
-        }
-    }
-
-    @Test
-    void testGetName() {
-        System.out.println(userMapper.getNameByAccount("170110314"));
-    }
-
-    @Test
-    void selectOneQuestionById() {
-        System.out.println(questionService.selectOneQuestionById(1));
-    }
-
-    @Test
-    void restTemplate() {
-        String url = "http://47.97.202.211:16666/findAll";
-
-        RestTemplate restTemplate = new RestTemplate();
-        String s = restTemplate.getForObject(url, String.class);
-        System.out.println(s);
-    }
-
-    @Test
-    void testInt() {
-        long i = 30000000000L;
-        System.out.println(i);
-    }
-
-    @Test
-    void restTemplatePost() {
-        String url = "http://118.178.194.230:5050/file";
-        RestTemplate restTemplate = new RestTemplate();
-        String s = restTemplate.getForObject(url, String.class);
-        System.out.println(s);
-    }
-
-    @Test
-    void testFastJson() throws Exception {
-        String s = SandboxUtils.compileCodeInSandbox("hh");
-        System.out.println(s);
-    }
-
-    @Test
-    void testFastJSON2() {
-        String s = "[{\"status\":\"Accepted\",\"exitStatus\":0,\"time\":1285585,\"memory\":262144,\"runTime\":1788296,\"files\":{\"stderr\":\"\",\"stdout\":\"20\\n\"}}]";
-        s = s.substring(1, s.length() - 1);
-        System.out.println(s);
-        SandboxResponse res = JSON.parseObject(s, SandboxResponse.class);
-        System.out.println(res);
-    }
-
-    @Test
-    void testPost() throws Exception {
-        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a - b);\n}";
+//    @Test
+//    void insertQ() {
+//
+//        Question q = new Question();
+//        q.setName("test test");
+//        q.setAccount("170110317");
+//        q.setQuestionDescription("alielie");
+//        q.setInputDescription("bilibili");
+//        q.setOutputDescription("acfun");
+//        q.setSampleInput("1 2 3\n" +
+//                "4 5 6 7\n" +
+//                "2 3");
+//        q.setSampleOutput("2 3 4");
+//        int i = questionMapper.insertOneQuestion(q);
+//        System.out.println(i);
+//    }
+//
+//    @Test
+//    void selectAllQ() {
+//        List<Question> q = questionMapper.selectAllQuestion();
+//        System.out.println(q);
+//    }
+//
+//    @Test
+//    void insertOneSample() {
+//        Sample s = new Sample();
+//        s.setPid(1);
+//        s.setInput("3 5");
+//        s.setOutput("8");
+//        questionMapper.insertOneSample(s);
+//    }
+//
+//    @Test
+//    void selectOneQuestion() {
+//        Question q = questionMapper.selectOneQuestion(1);
+//        System.out.println(q);
+//    }
+//
+//    @Test
+//    void testTransactional() {
+//        try {
+//            questionService.insertOneQuestion(new Question());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("false");
+//        }
+//    }
+//
+//    @Test
+//    void testGetName() {
+//        System.out.println(userMapper.getNameByAccount("170110314"));
+//    }
+//
+//    @Test
+//    void selectOneQuestionById() {
+//        System.out.println(questionService.selectOneQuestionById(1));
+//    }
+//
+//    @Test
+//    void restTemplate() {
+//        String url = "http://47.97.202.211:16666/findAll";
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        String s = restTemplate.getForObject(url, String.class);
 //        System.out.println(s);
-        String res = SandboxUtils.compileCodeInSandbox(s);
-        System.out.println(res);
-    }
+//    }
+//
+//    @Test
+//    void testInt() {
+//        long i = 30000000000L;
+//        System.out.println(i);
+//    }
+
+//    @Test
+//    void restTemplatePost() {
+//        String url = "http://118.178.194.230:5050/file";
+//        RestTemplate restTemplate = new RestTemplate();
+//        String s = restTemplate.getForObject(url, String.class);
+//        System.out.println(s);
+//    }
+//
+//    @Test
+//    void testFastJson() throws Exception {
+//        String s = SandboxUtils.compileCodeInSandbox("hh");
+//        System.out.println(s);
+//    }
+//
+//    @Test
+//    void testFastJSON2() {
+//        String s = "[{\"status\":\"Accepted\",\"exitStatus\":0,\"time\":1285585,\"memory\":262144,\"runTime\":1788296,\"files\":{\"stderr\":\"\",\"stdout\":\"20\\n\"}}]";
+//        s = s.substring(1, s.length() - 1);
+//        System.out.println(s);
+//        SandboxResponse res = JSON.parseObject(s, SandboxResponse.class);
+//        System.out.println(res);
+//    }
+//
+//    @Test
+//    void testPost() throws Exception {
+//        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a - b);\n}";
+////        System.out.println(s);
+//        String res = SandboxUtils.compileCodeInSandbox(s);
+//        System.out.println(res);
+//    }
+//
+//    @Test
+//    void testDelete() {
+//        try {
+//            SandboxUtils.deleteFileByIdInSandbox("ABNZVTDQPIUQBDHN");
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            System.out.println(e.toString());
+////            throw e;
+//        }
+//    }
+//
+//    @Test
+//    void testOJ() {
+//        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a + b);\nwhile(1){}}";
+//        Question q = new Question();
+//        List<Sample> samples = new ArrayList<>();
+//        Sample sample1 = new Sample();
+//        Sample sample2 = new Sample();
+//        Sample sample3 = new Sample();
+//        sample1.setInput("1 2");
+//        sample2.setInput("23 54");
+//        sample3.setInput("2 4");
+//        sample1.setOutput("3");
+//        sample2.setOutput("77");
+//        sample3.setOutput("5");
+//        samples.add(sample1);
+//        samples.add(sample2);
+//        samples.add(sample3);
+//        q.setSamples(samples);
+//        OJResponse  res = questionService.onlineJudgement(q, s);
+//        System.out.println(res);
+//
+//    }
 
     @Test
-    void testDelete() {
-        try {
-            SandboxUtils.deleteFileByIdInSandbox("ABNZVTDQPIUQBDHN");
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(e.toString());
-//            throw e;
-        }
-    }
-
-    @Test
-    void testOJ() {
-        String s = "#include<stdio.h>\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", a + b);\nwhile(1){}}";
-        Question q = new Question();
-        List<Sample> samples = new ArrayList<>();
-        Sample sample1 = new Sample();
-        Sample sample2 = new Sample();
-        Sample sample3 = new Sample();
-        sample1.setInput("1 2");
-        sample2.setInput("23 54");
-        sample3.setInput("2 4");
-        sample1.setOutput("3");
-        sample2.setOutput("77");
-        sample3.setOutput("5");
-        samples.add(sample1);
-        samples.add(sample2);
-        samples.add(sample3);
-        q.setSamples(samples);
-        OJResponse  res = questionService.onlineJudgement(q, s);
-        System.out.println(res);
-
+    void selectQuestionByName() {
+        System.out.println(questionMapper.selectQuestionByName("a+b问题"));
     }
 }

@@ -16,4 +16,6 @@ public interface QuestionMapper {
     int insertOneSample(Sample sample);
 
     Question selectOneQuestion(int id);
+
+    int selectQuestionByName(String name);
 }

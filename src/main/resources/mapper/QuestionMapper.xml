@@ -24,4 +24,10 @@
         FROM question
         WHERE id = #{id};
     </select>
+
+    <select id="selectQuestionByName" parameterType="string" resultType="int">
+        SELECT id
+        FROM question
+        WHERE name=#{name}
+    </select>
 </mapper>

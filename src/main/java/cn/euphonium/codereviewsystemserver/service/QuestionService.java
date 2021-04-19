@@ -2,12 +2,13 @@ package cn.euphonium.codereviewsystemserver.service;
 
 import cn.euphonium.codereviewsystemserver.entity.OJResponse;
 import cn.euphonium.codereviewsystemserver.entity.Question;
+import cn.euphonium.codereviewsystemserver.entity.SqlMsg;
 
 import java.util.List;
 
 public interface QuestionService {
 
-    void insertOneQuestion(Question question);
+    SqlMsg insertOneQuestion(Question question);
 
     Question selectOneQuestionById(int id);
 
