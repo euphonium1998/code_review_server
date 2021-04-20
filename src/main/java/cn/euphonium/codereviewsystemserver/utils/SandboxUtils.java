@@ -27,7 +27,7 @@ public class SandboxUtils {
         return sandboxResponse;
     }
 
-    public static String compileCodeInSandbox(String content) {
+    public static String compileCodeInSandbox(String content) throws Exception {
         Cmd cmd = new Cmd();
         String[] args = {"/usr/bin/gcc", "a.c", "-o", "a", "-std=c99"};
         cmd.setArgs(args);
@@ -44,6 +44,10 @@ public class SandboxUtils {
         String reqJSON = JSON.toJSONString(req);
 
         SandboxResponse sandboxResponse = runAndParse(reqJSON);
+
+        if (!sandboxResponse.getStatus().equals("Accepted")) {
+            throw new Exception("compile error");
+        }
 
         return sandboxResponse.getFileIds().get("a");
     }

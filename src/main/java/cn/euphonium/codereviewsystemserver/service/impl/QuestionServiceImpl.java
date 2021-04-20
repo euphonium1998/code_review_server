@@ -59,6 +59,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Question selectOneQuestionById(int id) {
         Question question = questionMapper.selectOneQuestion(id);
         question.setAccountName(userMapper.getNameByAccount(question.getAccount()));
+//        question.setSamples(questionMapper.getSampleByPid(question.getId()));
         return question;
     }
 
@@ -69,18 +70,28 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public OJResponse onlineJudgement(Question question, String code) {
+    public OJResponse onlineJudgement(OJRequest ojRequest) {
         String fileId = "";
         OJResponse ojRes = new OJResponse();
         ojRes.setStatus("Accepted");
+//        System.out.println(ojRequest);
         try {
-            fileId = SandboxUtils.compileCodeInSandbox(code);
+            Question question = questionMapper.selectOneQuestion(ojRequest.getQid());
+            ojRes.setName(question.getName());
+            question.setSamples(questionMapper.getSampleByPid(question.getId()));
+//            System.out.println(question);
+            fileId = SandboxUtils.compileCodeInSandbox(ojRequest.getCode());
             for (Sample sample : question.getSamples()) {
                 //judge
+//                System.out.println(sample);
                 ojRes = SandboxUtils.onlineJudgeOneSample(sample, fileId, ojRes);
             }
         } catch (Exception e) {
-            ojRes.setStatus("Other error[" + e.toString() + "]");
+            if (e.toString().equals("java.lang.Exception: compile error")) {
+                ojRes.setStatus("Compile error");
+            } else {
+                ojRes.setStatus("Other error[" + e.toString() + "]");
+            }
             return ojRes;
         } finally {
             if (!fileId.equals("")) {

@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class OJResponse {
+    String name;
     String status;
     long memory;
     long runTime;

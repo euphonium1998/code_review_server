@@ -30,4 +30,10 @@
         FROM question
         WHERE name=#{name}
     </select>
+
+    <select id="getSampleByPid" parameterType="int" resultType="Sample">
+        SELECT *
+        FROM sample
+        WHERE qid = #{qid}
+    </select>
 </mapper>

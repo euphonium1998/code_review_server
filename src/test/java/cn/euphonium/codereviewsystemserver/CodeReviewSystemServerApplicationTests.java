@@ -248,4 +248,17 @@ class CodeReviewSystemServerApplicationTests {
     void selectQuestionByName() {
         System.out.println(questionMapper.selectQuestionByName("a+b问题"));
     }
+
+    @Test
+    void nullPointerTest() {
+        OJRequest ojRequest = new OJRequest();
+        ojRequest.setQid(1);
+        ojRequest.setCode("/* example */\n" +
+                "#include<stdio.h>\n" +
+                "\n" +
+                "int main() {\n" +
+                "    printf(\"hello world\\n\");\n" +
+                "}");
+        System.out.println(questionService.onlineJudgement(ojRequest));
+    }
 }

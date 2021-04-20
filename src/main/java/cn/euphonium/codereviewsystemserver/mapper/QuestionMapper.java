@@ -18,4 +18,6 @@ public interface QuestionMapper {
     Question selectOneQuestion(int id);
 
     int selectQuestionByName(String name);
+
+    List<Sample> getSampleByPid(int pid);
 }

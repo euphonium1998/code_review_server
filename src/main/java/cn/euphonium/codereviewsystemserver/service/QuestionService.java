@@ -1,5 +1,6 @@
 package cn.euphonium.codereviewsystemserver.service;
 
+import cn.euphonium.codereviewsystemserver.entity.OJRequest;
 import cn.euphonium.codereviewsystemserver.entity.OJResponse;
 import cn.euphonium.codereviewsystemserver.entity.Question;
 import cn.euphonium.codereviewsystemserver.entity.SqlMsg;
@@ -14,7 +15,6 @@ public interface QuestionService {
 
     List<Question> selectAllQuestion();
 
-    OJResponse onlineJudgement(Question question, String code);
-
+    OJResponse onlineJudgement(OJRequest ojRequest);
 
 }
