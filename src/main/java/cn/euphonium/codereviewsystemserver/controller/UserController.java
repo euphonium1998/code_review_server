@@ -27,4 +27,9 @@ public class UserController {
         return userService.login(user);
     }
 
+    @RequestMapping("/modifyPassword")
+    public User modifyPassword(@RequestBody User user) {
+        return userService.modifyPassword(user);
+    }
+
 }

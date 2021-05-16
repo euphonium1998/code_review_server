@@ -12,4 +12,6 @@ public interface UserMapper {
     User login(User user);
 
     String getNameByAccount(String account);
+
+    int modifyPassword(User user);
 }

@@ -54,20 +54,21 @@ class CodeReviewSystemServerApplicationTests {
 
     @Test
     void error1() {
-        String s = "#include<stdio.h>\n" +
-                "int main() { //code he\"\"re1\n" +
-                "    int a=0, b =1;\n" +
-                "    printf(\"hellon\");\n" +
+        String s = "/* example */\n" +
+                "#include<stdio.h>\n" +
+                "int main() {\n" +
+                "      int a=0, b =1;\n" +
+                "       printf(\"hellon\");\n" +
                 "    return 0;\n" +
-                "    for (int i = 0; i <3; i++) { //code3\n" +
-                "        b+=i;\n" +
-                "        \n" +
-                "    }\n" +
-                "    for (int k = 0; k < 22;) {\n" +
-                "        k<< 1;\n" +
+                "    for (int i = 0; i <3; i++) { //code here\n" +
+                "b+=i;\n" +
+                "     \n" +
+                "      }\n" +
+                "    for (   int k = 0; k < 22;) {\n" +
+                "           k<< 1;\n" +
                 "    }\n" +
                 "    /*\n" +
-                "    code he're'2\n" +
+                "    code here\n" +
                 "    */\n" +
                 "}";
         System.out.println(CodeUtils.codeFormat(s));
@@ -261,4 +262,11 @@ class CodeReviewSystemServerApplicationTests {
                 "}");
         System.out.println(questionService.onlineJudgement(ojRequest));
     }
+
+//    @Test void modifyPassword() {
+//        User user = new User();
+//        user.setAccount("170110314");
+//        user.setPassword("13579");
+//        System.out.println(userMapper.modifyPassword(user));
+//    }
 }

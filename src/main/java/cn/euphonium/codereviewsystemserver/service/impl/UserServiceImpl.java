@@ -25,4 +25,16 @@ public class UserServiceImpl implements UserService {
         User userGot = userMapper.login(user);
         return userGot == null ? new User(ConstInfo.ERROR) : userGot;
     }
+
+    @Override
+    public User modifyPassword(User user) {
+        int flag = userMapper.modifyPassword(user);
+        if (flag == 1) {
+            return userMapper.login(user);
+        } else {
+            return new User(ConstInfo.ERROR);
+        }
+    }
+
+
 }

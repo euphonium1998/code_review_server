@@ -16,4 +16,10 @@
         FROM user
         WHERE account = #{account}
     </select>
+
+    <update id="modifyPassword" parameterType="User">
+        UPDATE user
+        SET user.password = #{password}
+        WHERE user.account = #{account};
+    </update>
 </mapper>
