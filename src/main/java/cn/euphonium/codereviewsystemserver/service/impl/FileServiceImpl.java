@@ -2,6 +2,7 @@ package cn.euphonium.codereviewsystemserver.service.impl;
 
 import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
 import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
+import cn.euphonium.codereviewsystemserver.entity.PDF;
 import cn.euphonium.codereviewsystemserver.service.FileService;
 import cn.euphonium.codereviewsystemserver.utils.CodeUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -39,7 +40,7 @@ public class FileServiceImpl implements FileService {
             byte[] b = new byte[8192];
 
             //gcc part
-            Process processGcc = Runtime.getRuntime().exec("gcc ./file/test.c");
+            Process processGcc = Runtime.getRuntime().exec("gcc -std=c99 ./file/test.c");
             InputStream inputStreamGcc = processGcc.getErrorStream();
             for (int n; (n = inputStreamGcc.read(b)) != -1;) {
                 sb.append(new String(b, 0, n));
@@ -48,7 +49,7 @@ public class FileServiceImpl implements FileService {
 
             //splint part
             StringBuilder splintSb = new StringBuilder();
-            Process processSplint = Runtime.getRuntime().exec("splint ./file/test.c");
+            Process processSplint = Runtime.getRuntime().exec("splint +bounds ./file/test.c");
             InputStream inputStreamSplint = processSplint.getInputStream();
             for (int n; (n = inputStreamSplint.read(b)) != -1;) {
                 splintSb.append(new String(b, 0, n));
@@ -139,6 +140,27 @@ public class FileServiceImpl implements FileService {
 //            System.out.println("no file exist");
             return null;
         }
+    }
+
+    @Override
+    public PDF generatePDF(String code) throws IOException {
+        PDF pdf = new PDF(ConstInfo.SUCCESS);
+        pdf.setOriginalCode(code);
+        String codeReview = codeReview(code);
+        if (codeReview.equals("error")) {
+            pdf.setStatus(ConstInfo.C_COMPILE_ERROR);
+            return pdf;
+        }
+        pdf.setStaticAnalysisRes(codeReview);
+        CodeMsg codeMsg = new CodeMsg();
+        codeMsg.setCode(code);
+        CodeMsg codeFormatMsg = codeFormat(codeMsg);
+        if (codeFormatMsg.getStatus() == ConstInfo.C_COMPILE_ERROR) {
+            pdf.setStatus(ConstInfo.C_COMPILE_ERROR);
+            return pdf;
+        }
+        pdf.setCodeFormatRes(codeFormatMsg.getCode());
+        return pdf;
     }
 
     public ResponseEntity<Object> downloadFile(File file) {

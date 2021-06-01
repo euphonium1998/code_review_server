@@ -3,6 +3,7 @@ package cn.euphonium.codereviewsystemserver.controller;
 import cn.euphonium.codereviewsystemserver.entity.CodeMsg;
 import cn.euphonium.codereviewsystemserver.entity.ConstInfo;
 import cn.euphonium.codereviewsystemserver.entity.FileContent;
+import cn.euphonium.codereviewsystemserver.entity.PDF;
 import cn.euphonium.codereviewsystemserver.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class FileController {
 
     @RequestMapping(value = "/upload")
     public FileContent upload(MultipartFile file) throws SocketException, IOException {
+        System.out.println("hello");
         FileContent fileContent = new FileContent();
         if (file == null) {
             fileContent.setStatus(ConstInfo.FILE_ERROR);
@@ -54,7 +56,7 @@ public class FileController {
 
     @RequestMapping(value = "/codeReview", method = RequestMethod.POST)
     public String codeReview(@RequestBody CodeMsg codeMsg) throws IOException {
-
+        System.out.println(codeMsg.getCode());
         return fileService.codeReview(codeMsg.getCode());
     }
 
@@ -68,5 +70,15 @@ public class FileController {
     public ResponseEntity<Object> download() {
 //        System.out.println("here");
         return fileService.download();
+    }
+
+    @RequestMapping(value = "/cosine")
+    public PDF generatePDF(MultipartFile file) throws SocketException, IOException {
+        FileContent fileContent = new FileContent();
+        if (file == null) {
+            return new PDF(ConstInfo.FILE_ERROR);
+        }
+        String content = new String(file.getBytes(),"UTF-8");
+        return fileService.generatePDF(content);
     }
 }

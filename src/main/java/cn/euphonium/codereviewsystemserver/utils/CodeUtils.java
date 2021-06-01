@@ -343,10 +343,22 @@ public class CodeUtils {
 
     public static String splintProcess(String originalContent) {
         StringBuilder sb = new StringBuilder();
-        Pattern patternMemory = Pattern.compile("(\\d+):(\\d+): Fresh storage a not released before return");
+
+        Pattern patternMemory = Pattern.compile("(\\d+):(\\d+): Fresh storage .* not released before return");
         Matcher matcherMemory = patternMemory.matcher(originalContent);
+
         Pattern patternVar = Pattern.compile(":(\\d+):\\d+: Variable (\\w(\\w|\\d)*) declared but not used");
         Matcher matcherVar = patternVar.matcher(originalContent);
+
+        Pattern patternPointer = Pattern.compile("(\\d+):(\\d+): Dereference of null pointer (\\w(\\w|\\d)*):");
+        Matcher matcherPointer = patternPointer.matcher(originalContent);
+
+        Pattern patternType = Pattern.compile("(\\d+):\\d+: Assignment of .* to .*: (.*)?\n");
+        Matcher matcherType = patternType.matcher(originalContent);
+
+        Pattern patternBufferSize = Pattern.compile("(\\d+):\\d+: Likely out-of-bounds store: (.*)?\n");
+        Matcher matcherBufferSize = patternBufferSize.matcher(originalContent);
+
         while (matcherMemory.find()) {
             String row = matcherMemory.group(1);
 //            String col = matcherVar.group(2);
@@ -357,6 +369,22 @@ public class CodeUtils {
             String varName = matcherVar.group(2);
             sb.append("代码").append(row).append("行: ").append("变量").append(varName).append("未使用\n");
         }
+        while (matcherPointer.find()) {
+            String row  = matcherPointer.group(1);
+            String varName = matcherPointer.group(3);
+            sb.append("代码").append(row).append("行: ").append("解引用空指针").append(varName).append("\n");
+        }
+        while (matcherType.find()) {
+            String row = matcherType.group(1);
+            String phrase = matcherType.group(2);
+            sb.append("代码").append(row).append("行: ").append("存在强制类型转换").append(phrase).append("\n");
+        }
+        while (matcherBufferSize.find()) {
+            String row = matcherBufferSize.group(1);
+            String phrase = matcherBufferSize.group(2);
+            sb.append("代码").append(row).append("行: ").append("存在数组越界").append(phrase).append("\n");
+        }
+
         return sb.toString();
     }
 }
