@@ -104,7 +104,7 @@ class CodeReviewSystemServerApplicationTests {
                 "  A variable is declared but never used. Use /*@unused@*/ in front of\n" +
                 "  declaration to suppress message. (Use -varuse to inhibit warning)\n" +
                 "aa.c:6:7: Variable a declared but not used";
-        System.out.println(CodeUtils.splintProcess(s));
+//        System.out.println(CodeUtils.splintProcess(s, ""));
     }
 
 //    @Test

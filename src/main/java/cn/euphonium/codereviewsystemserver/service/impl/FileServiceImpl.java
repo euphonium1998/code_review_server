@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService {
             for (int n; (n = inputStreamSplint.read(b)) != -1;) {
                 splintSb.append(new String(b, 0, n));
             }
-            String splintContent = CodeUtils.splintProcess(splintSb.toString());
+            String splintContent = CodeUtils.splintProcess(splintSb.toString(), code);
             sb.append(splintContent);
 
 //            inputStreamSplint = processSplint.getErrorStream();
@@ -80,12 +80,14 @@ public class FileServiceImpl implements FileService {
     public CodeMsg codeFormat(CodeMsg codeMsg) {
         //todo
         String code = codeMsg.getCode();
+//        System.out.println(code);
         CodeMsg res = new CodeMsg();
         try {
             //write to file
             BufferedWriter out = new BufferedWriter(new FileWriter("code_format.c"));
             out.write(code);
             out.close();
+
 
             StringBuilder sb = new StringBuilder();
 //            sb.append("eupho");
@@ -108,6 +110,7 @@ public class FileServiceImpl implements FileService {
             for (String line : compileResultLines) {
                 if (line.matches(regex)) {
                     res.setStatus(ConstInfo.C_COMPILE_ERROR);
+                    res.setCode("compile error");
                     break;
                 }
             }

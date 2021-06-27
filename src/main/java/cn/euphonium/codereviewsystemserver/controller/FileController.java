@@ -81,4 +81,11 @@ public class FileController {
         String content = new String(file.getBytes(),"UTF-8");
         return fileService.generatePDF(content);
     }
+
+    @RequestMapping(value = "/cosineNoFile")
+    public PDF generatePDFWithJSON(@RequestBody CodeMsg codeMsg) throws IOException {
+        String content = codeMsg.getCode();
+//        System.out.println(content);
+        return fileService.generatePDF(content);
+    }
 }

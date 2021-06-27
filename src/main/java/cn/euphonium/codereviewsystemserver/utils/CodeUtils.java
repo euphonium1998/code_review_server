@@ -341,7 +341,12 @@ public class CodeUtils {
         return CodeUtils.annotationRecovery(codeFormatted, annotationList);
     }
 
-    public static String splintProcess(String originalContent) {
+    public static String splintProcess(String originalContent, String code) {
+        String[] codes = code.split("\n");
+        for (int i = 0; i < codes.length; i++) {
+            codes[i] = codes[i].trim();
+            System.out.println(codes[i]);
+        }
         StringBuilder sb = new StringBuilder();
 
         Pattern patternMemory = Pattern.compile("(\\d+):(\\d+): Fresh storage .* not released before return");
@@ -362,27 +367,32 @@ public class CodeUtils {
         while (matcherMemory.find()) {
             String row = matcherMemory.group(1);
 //            String col = matcherVar.group(2);
-            sb.append("代码").append(row).append("行: 申请内存未释放\n");
+            int rowInt = Integer.parseInt(row) - 1;
+            sb.append("代码").append(row).append("行: 申请内存未释放 //").append(codes[rowInt]).append("\n");
         }
         while (matcherVar.find()) {
             String row = matcherVar.group(1);
             String varName = matcherVar.group(2);
-            sb.append("代码").append(row).append("行: ").append("变量").append(varName).append("未使用\n");
+            int rowInt = Integer.parseInt(row) - 1;
+            sb.append("代码").append(row).append("行: ").append("变量").append(varName).append("未使用 //").append(codes[rowInt]).append("\n");
         }
         while (matcherPointer.find()) {
             String row  = matcherPointer.group(1);
             String varName = matcherPointer.group(3);
-            sb.append("代码").append(row).append("行: ").append("解引用空指针").append(varName).append("\n");
+            int rowInt = Integer.parseInt(row) - 1;
+            sb.append("代码").append(row).append("行: ").append("解引用空指针").append(varName).append(" //").append(codes[rowInt]).append("\n");
         }
         while (matcherType.find()) {
             String row = matcherType.group(1);
             String phrase = matcherType.group(2);
-            sb.append("代码").append(row).append("行: ").append("存在强制类型转换").append(phrase).append("\n");
+            int rowInt = Integer.parseInt(row) - 1;
+            sb.append("代码").append(row).append("行: ").append("存在强制类型转换").append(phrase).append(" //").append(codes[rowInt]).append("\n");
         }
         while (matcherBufferSize.find()) {
             String row = matcherBufferSize.group(1);
             String phrase = matcherBufferSize.group(2);
-            sb.append("代码").append(row).append("行: ").append("存在数组越界").append(phrase).append("\n");
+            int rowInt = Integer.parseInt(row) - 1;
+            sb.append("代码").append(row).append("行: ").append("存在数组越界").append(phrase).append(" //").append(codes[rowInt]).append("\n");
         }
 
         return sb.toString();
